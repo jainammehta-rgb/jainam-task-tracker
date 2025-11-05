@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jainam Task Tracker</title>
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --panel: #ffffff;
+      --panel-2: #e3e6f3;
+      --ink: #2f3a50;
+      --muted: #7a8ba6;
+      --brand: #4a90e2;
+      --ok: #27ae60;
+      --warn: #f39c12;
+      --danger: #e74c3c;
+      --chip: #d6e0f0;
+      --line: #ccd6f6;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, Segoe UI, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255 255 255 / 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 20px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0.2px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--brand);
+      font-weight: 700;
+    }
+    .badge {
+      font-size: 12px;
+      color: var(--muted);
+      background: #d6e0f0;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    @media (max-width: 980px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+    .card-inner {
+      padding: 16px;
+    }
+    .card h2 {
+      margin: 0 0 10px 0;
+      font-size: 15px;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 10px 0 6px;
+    }
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      color: var(--ink);
+      font-size: 14px;
+    }
+    textarea {
+      min-height: 72px;
+      resize: vertical;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+    .row > * {
+      flex: 1;
+    }
+    .chk {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink);
+      font-size: 13px;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background-color 0.2s ease;
+    }
+    .btn-primary {
+      background: var(--brand);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #357abd;
+    }
+    .btn {
+      background: var(--chip);
+      color: var(--ink);
+    }
+    .btn:hover {
+      background: #cfd9f1;
+    }
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #c0392b;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .pill {
+      font-size: 12px;
+      border: 1px solid var(--line);
+      background: #d6e0f0;
+      color: var(--brand);
+      border-radius: 999px;
+      padding: 6px 10px;
+      user-select: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    thead th {
+      position: sticky;
+      top: 65px;
+      background: var(--panel-2);
+      border-bottom: 1px solid var(--line);
+      padding: 10px 8px;
+      text-align: left;
+      color: var(--ink);
+      z-index: 10;
+      font-weight: 700;
+    }
+    thead tr.filter-row th {
+      background: var(--panel);
+      border-bottom: none;
+      padding: 4px 8px;
+    }
+    thead tr.filter-row input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 4px 6px;
+      font-size: 13px;
+      background: var(--chip);
+      color: var(--ink);
+      box-sizing: border-box;
+    }
+    tbody td {
+      border-bottom: 1px dashed var(--line);
+      padding: 10px 8px;
+      vertical-align: top;
+      color: var(--ink);
+    }
+    tfoot td {
+      padding: 12px 8px;
+      font-weight: 700;
+      color: var(--ink);
+      border-top: 1px solid var(--line);
+    }
+    .center {
+      text-align: center;
+    }
+    .right {
+      text-align: right;
+    }
+    .chip {
+      display: inline-block;
+      font-size: 11px;
+      background: var(--chip);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+    .chip.ok {
+      border-color: var(--ok);
+      color: #1e8449;
+      background: #d4f5da;
+    }
+    .chip.warn {
+      border-color: var(--warn);
+      color: #b9770e;
+      background: #fff2cc;
+    }
+    .chip.danger {
+      border-color: var(--danger);
+      color: #a93226;
+      background: #fbdada;
+    }
+
+    .stats {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 8px 0 0;
+      color: var(--ink);
+      font-size: 12px;
+    }
+    .stat {
+      background: var(--chip);
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brand);
+    }
+
+    .empty {
+      padding: 30px;
+      text-align: center;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap" style="display:flex;align-items:center;justify-content:space-between">
+      <h1>Jainam Task Tracker <span class="badge">Local‑first • Offline</span></h1>
+      <div class="stats" id="stats"></div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+      <!-- Left: Form -->
+      <section class="card">
+        <div class="card-inner">
+          <h2 id="formTitle">Add Task</h2>
+          <form id="taskForm">
+            <input type="hidden" id="taskId" />
+
+            <label>Task</label>
+            <input id="taskDescription" type="text" placeholder="e.g., GST return filing – ACME Pvt Ltd" required />
+
+            <div class="row">
+              <div>
+                <label>Client</label>
+                <input id="clientName" type="text" placeholder="Client name" />
+              </div>
+              <div>
+                <label>Assignee</label>
+                <input id="assigned" type="text" placeholder="Assigned to" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div>
+                <label>Reviewer</label>
+                <input id="reviewBy" type="text" placeholder="Reviewer" />
+              </div>
+              <div>
+                <label>Hours Spent (h)</label>
+                <input id="hoursSpent" type="number" step="0.25" min="0" placeholder="0" />
+              </div>
+            </div>
+
+            <label class="chk">
+              <input type="checkbox" id="billable" /> Billable work
+            </label>
+
+            <label>Notes</label>
+            <textarea id="remarks" placeholder="Any details or checklist…"></textarea>
+
+            <div class="actions">
+              <button type="submit" class="btn-primary" id="saveBtn">Save Task</button>
+              <button type="button" class="btn" id="resetBtn">Reset</button>
+              <button type="button" class="btn-danger" id="deleteAllBtn">Delete All</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Right: Table -->
+      <section class="card">
+        <div class="card-inner">
+          <div class="toolbar">
+            <button class="btn" id="pendingSummaryBtn">Pending Summary</button>
+            <button class="btn" id="togglePendingBtn">Show Pending Only</button>
+            <button class="btn" id="exportCsvBtn">Export CSV</button>
+            <span class="pill" id="sortInfo">Sorted by Newest</span>
+          </div>
+
+          <table id="taskTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Created</th>
+                <th>Task</th>
+                <th>Client</th>
+                <th>Assignee</th>
+                <th>Reviewer</th>
+                <th>Billable</th>
+                <th>Completed</th>
+                <th>Age (days)</th>
+                <th>Done</th>
+                <th>Hours</th>
+                <th>Notes</th>
+                <th>Actions</th>
+              </tr>
+              <tr class="filter-row">
+                <th><input type="text" data-filter="index" placeholder="#" /></th>
+                <th><input type="text" data-filter="created" placeholder="Filter Created" /></th>
+                <th><input type="text" data-filter="description" placeholder="Filter Task" /></th>
+                <th><input type="text" data-filter="client" placeholder="Filter Client" /></th>
+                <th><input type="text" data-filter="assigned" placeholder="Filter Assignee" /></th>
+                <th><input type="text" data-filter="reviewBy" placeholder="Filter Reviewer" /></th>
+                <th>
+                  <select data-filter="billable">
+                    <option value="">All</option>
+                    <option value="billable">Billable</option>
+                    <option value="non-billable">Non-billable</option>
+                  </select>
+                </th>
+                <th><input type="text" data-filter="completed" placeholder="Filter Completed" /></th>
+                <th><input type="text" data-filter="age" placeholder="Filter Age" /></th>
+                <th>
+                  <select data-filter="done">
+                    <option value="">All</option>
+                    <option value="Yes">Done</option>
+                    <option value="No">Pending</option>
+                  </select>
+                </th>
+                <th><input type="text" data-filter="hours" placeholder="Filter Hours" /></th>
+                <th><input type="text" data-filter="notes" placeholder="Filter Notes" /></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="10" class="right">Total Hours (visible)</td>
+                <td id="hoursTotal" class="right">0.00</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+          <div class="empty" id="empty" hidden>No tasks yet. Add your first task →</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'task-tracker-table-v3';
+
+    /** @typedef {{
+      id: number,
+      description: string,
+      client: string,
+      assigned: string,
+      reviewBy: string,
+      billable: boolean,
+      remarks: string,
+      createdAt: string,
+      done: boolean,
+      completedAt?: string,
+      hours?: number
+    }} Task */
+
+    /** @type {Task[]} */
+    let tasks = [];
+    try {
+      tasks = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    } catch {
+      tasks = [];
+    }
+
+    const els = {
+      form: document.getElementById('taskForm'),
+      id: document.getElementById('taskId'),
+      desc: document.getElementById('taskDescription'),
+      client: document.getElementById('clientName'),
+      assigned: document.getElementById('assigned'),
+      reviewer: document.getElementById('reviewBy'),
+      billable: document.getElementById('billable'),
+      remarks: document.getElementById('remarks'),
+      hours: document.getElementById('hoursSpent'),
+      tableBody: document.querySelector('#taskTable tbody'),
+      hoursTotal: document.getElementById('hoursTotal'),
+      stats: document.getElementById('stats'),
+      empty: document.getElementById('empty'),
+      togglePendingBtn: document.getElementById('togglePendingBtn'),
+      exportCsvBtn: document.getElementById('exportCsvBtn'),
+      pendingSummaryBtn: document.getElementById('pendingSummaryBtn'),
+      resetBtn: document.getElementById('resetBtn'),
+      deleteAllBtn: document.getElementById('deleteAllBtn'),
+      formTitle: document.getElementById('formTitle'),
+      saveBtn: document.getElementById('saveBtn'),
+      filterInputs: document.querySelectorAll('thead tr.filter-row [data-filter]'),
+    };
+
+    let showPendingOnly = false;
+    let filters = {};
+
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    }
+    function todayISO() {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d.toISOString();
+    }
+    function daysBetween(aIso, bIso) {
+      const ms = new Date(bIso).setHours(0, 0, 0, 0) - new Date(aIso).setHours(0, 0, 0, 0);
+      return Math.floor(ms / 86400000);
+    }
+    function esc(s = '') {
+      return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' }[c]));
+    }
+
+    // Filter matching helper
+    function matchFilter(value, filter) {
+      if (!filter) return true;
+      if (typeof value !== 'string') value = String(value);
+      return value.toLowerCase().includes(filter.toLowerCase());
+    }
+
+    function render() {
+      const view = [...tasks]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .filter(t => {
+          if (showPendingOnly && t.done) return false;
+          // Apply filters on columns
+          for (const key in filters) {
+            const filterVal = filters[key];
+            if (!filterVal) continue;
+            switch (key) {
+              case 'index': {
+                if (!matchFilter(String(tasks.indexOf(t) + 1), filterVal)) return false;
+                break;
+              }
+              case 'created': {
+                if (!matchFilter(new Date(t.createdAt).toLocaleDateString(), filterVal)) return false;
+                break;
+              }
+              case 'description': {
+                if (!matchFilter(t.description, filterVal)) return false;
+                break;
+              }
+              case 'client': {
+                if (!matchFilter(t.client || '', filterVal)) return false;
+                break;
+              }
+              case 'assigned': {
+                if (!matchFilter(t.assigned || '', filterVal)) return false;
+                break;
+              }
+              case 'reviewBy': {
+                if (!matchFilter(t.reviewBy || '', filterVal)) return false;
+                break;
+              }
+              case 'billable': {
+                if (filterVal === 'billable' && !t.billable) return false;
+                if (filterVal === 'non-billable' && t.billable) return false;
+                break;
+              }
+              case 'completed': {
+                if (!matchFilter(t.completedAt ? new Date(t.completedAt).toLocaleDateString() : '', filterVal)) return false;
+                break;
+              }
+              case 'age': {
+                const age = t.done ? '' : daysBetween(t.createdAt, todayISO());
+                if (!matchFilter(age.toString(), filterVal)) return false;
+                break;
+              }
+              case 'done': {
+                if (filterVal === 'Yes' && !t.done) return false;
+                if (filterVal === 'No' && t.done) return false;
+                break;
+              }
+              case 'hours': {
+                if (!matchFilter((Number(t.hours) || 0).toFixed(2), filterVal)) return false;
+                break;
+              }
+              case 'notes': {
+                if (!matchFilter(t.remarks || '', filterVal)) return false;
+                break;
+              }
+            }
+          }
+          return true;
+        });
+
+      els.tableBody.innerHTML = '';
+      let total = 0;
+
+      view.forEach((t, idx) => {
+        const tr = document.createElement('tr');
+        const created = new Date(t.createdAt).toLocaleDateString();
+        const completed = t.completedAt ? new Date(t.completedAt).toLocaleDateString() : '';
+        const age = t.done ? '' : daysBetween(t.createdAt, todayISO());
+        const ageChipClass = t.done ? '' : age >= 10 ? 'danger' : age >= 5 ? 'warn' : 'ok';
+        const h = Number.isFinite(t.hours) ? Number(t.hours) : 0;
+        total += (showPendingOnly && t.done) ? 0 : h;
+
+        tr.innerHTML = `
+          <td class="center">${idx + 1}</td>
+          <td>${esc(created)}</td>
+          <td>${esc(t.description)}</td>
+          <td>${esc(t.client || '')}</td>
+          <td>${esc(t.assigned || '')}</td>
+          <td>${esc(t.reviewBy || '')}</td>
+          <td class="center">${t.billable ? '<span class="chip ok">Billable</span>' : '<span class="chip">Non‑billable</span>'}</td>
+          <td>${esc(completed)}</td>
+          <td>${t.done ? '' : `<span class="chip ${ageChipClass}">${age}</span>`}</td>
+          <td class="center"><input type="checkbox" ${t.done ? 'checked' : ''} data-done /></td>
+          <td class="right">${h.toFixed(2)}</td>
+          <td>${esc(t.remarks || '')}</td>
+          <td>
+            <button class="btn" data-edit>Edit</button>
+            <button class="btn-danger" data-del>Delete</button>
+          </td>
+        `;
+        tr.querySelector('[data-edit]').addEventListener('click', () => editTask(t.id));
+        tr.querySelector('[data-del]').addEventListener('click', () => remove(t.id));
+        tr.querySelector('[data-done]').addEventListener('change', (e) => toggleDone(t.id, e.target.checked));
+        els.tableBody.appendChild(tr);
+      });
+
+      els.hoursTotal.textContent = total.toFixed(2);
+      els.empty.hidden = view.length !== 0;
+      renderStats();
+    }
+
+    function renderStats() {
+      const open = tasks.filter(t => !t.done).length;
+      const done7 = tasks.filter(t => t.done && t.completedAt && daysBetween(t.completedAt, todayISO()) <= 7).length;
+      const billableHrs = tasks.reduce((s, t) => s + (t.billable ? Number(t.hours) || 0 : 0), 0);
+      els.stats.innerHTML = `
+        <div class="stat">Open: <b>${open}</b></div>
+        <div class="stat">Closed (7d): <b>${done7}</b></div>
+        <div class="stat">Billable Hours (all): <b>${billableHrs.toFixed(2)}</b></div>
+      `;
+    }
+
+    // Form
+    els.form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = els.id.value.trim();
+      const payload = {
+        description: els.desc.value.trim(),
+        client: els.client.value.trim(),
+        assigned: els.assigned.value.trim(),
+        reviewBy: els.reviewer.value.trim(),
+        billable: els.billable.checked,
+        remarks: els.remarks.value.trim(),
+        hours: Math.max(0, parseFloat(els.hours.value || '0') || 0)
+      };
+      if (!payload.description) {
+        alert('Task is required');
+        return;
+      }
+
+      if (id) {
+        const t = tasks.find(x => String(x.id) === id); if (!t) return;
+        Object.assign(t, payload);
+      } else {
+        /** @type {Task} */
+        const t = { id: Date.now(), createdAt: new Date().toISOString(), done: false, completedAt: undefined, ...payload };
+        tasks.push(t);
+      }
+      save();
+      clearFilterInputs();
+      render();
+      els.form.reset();
+      els.id.value = '';
+      els.formTitle.textContent = 'Add Task';
+      els.saveBtn.textContent = 'Save Task';
+    });
+
+    function editTask(id) {
+      const t = tasks.find(x => x.id === id); if (!t) return;
+      els.id.value = String(t.id);
+      els.desc.value = t.description; els.client.value = t.client || ''; els.assigned.value = t.assigned || ''; els.reviewer.value = t.reviewBy || '';
+      els.billable.checked = !!t.billable; els.remarks.value = t.remarks || ''; els.hours.value = (Number(t.hours) || 0).toString();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      els.formTitle.textContent = 'Edit Task';
+      els.saveBtn.textContent = 'Update Task';
+    }
+
+    function remove(id) { if (confirm('Delete this task?')) { tasks = tasks.filter(t => t.id !== id); save(); render(); } }
+
+    function toggleDone(id, checked) {
+      const t = tasks.find(x => x.id === id); if (!t) return;
+      t.done = checked;
+      t.completedAt = checked ? todayISO() : undefined; // auto set/clear completion date
+      save();
+      render();
+    }
+
+    // Toolbar
+    els.pendingSummaryBtn.addEventListener('click', () => {
+      const pending = tasks.filter(t => !t.done).sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      if (!pending.length) { alert('No pending tasks.'); return; }
+      const lines = pending.map(t => `• ${t.description} — ${daysBetween(t.createdAt, todayISO())} day(s) — ${t.client || '-'}`);
+      alert(`Pending tasks by oldest (days since creation)\n\n${lines.join('\n')}`);
+    });
+
+    els.togglePendingBtn.addEventListener('click', () => {
+      showPendingOnly = !showPendingOnly;
+      els.togglePendingBtn.textContent = showPendingOnly ? 'Show All' : 'Show Pending Only';
+      render();
+    });
+
+    els.exportCsvBtn.addEventListener('click', () => {
+      const header = ['#', 'Created', 'Task', 'Client', 'Assignee', 'Reviewer', 'Billable', 'Completed', 'Age (days)', 'Done', 'Hours', 'Notes'];
+      const view = [...tasks].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).filter(t => !showPendingOnly || !t.done);
+      const rows = view.map((t, i) => [
+        i + 1,
+        new Date(t.createdAt).toLocaleDateString(),
+        csv(t.description), csv(t.client || ''), csv(t.assigned || ''), csv(t.reviewBy || ''),
+        t.billable ? 'Yes' : 'No',
+        t.completedAt ? new Date(t.completedAt).toLocaleDateString() : '',
+        t.done ? '' : String(daysBetween(t.createdAt, todayISO())),
+        t.done ? 'Yes' : 'No',
+        (Number(t.hours) || 0).toFixed(2),
+        csv(t.remarks || '')
+      ]);
+      const csvStr = [header, ...rows].map(r => r.join(',')).join('\n');
+      const blob = new Blob([csvStr], { type: 'text/csv' }); const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'tasks.csv'; a.click(); URL.revokeObjectURL(url);
+    });
+
+    function csv(s = '') { return '"' + String(s).replaceAll('"', '""') + '"'; }
+
+    // Filters
+    els.filterInputs.forEach(input => {
+      input.addEventListener('input', onFilterChange);
+    });
+
+    function onFilterChange() {
+      filters = {};
+      els.filterInputs.forEach(input => {
+        const val = input.value.trim();
+        if (val) {
+          filters[input.dataset.filter] = val;
+        }
+      });
+      render();
+    }
+
+    function clearFilterInputs() {
+      els.filterInputs.forEach(input => {
+        if (input.tagName.toLowerCase() === 'select') {
+          input.value = '';
+        } else {
+          input.value = '';
+        }
+      });
+      filters = {};
+    }
+
+    // Misc controls
+    els.resetBtn.addEventListener('click', () => {
+      els.form.reset();
+      els.id.value = '';
+      els.formTitle.textContent = 'Add Task';
+      els.saveBtn.textContent = 'Save Task';
+      clearFilterInputs();
+      render();
+    });
+    els.deleteAllBtn.addEventListener('click', () => {
+      if (confirm('Delete ALL tasks?')) {
+        tasks = [];
+        save();
+        render();
+        els.form.reset();
+        els.id.value = '';
+        clearFilterInputs();
+      }
+    });
+
+    // Init
+    render();
+  </script>
+</body>
+</html>
