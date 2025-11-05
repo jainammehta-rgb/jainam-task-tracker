@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jainam Task Tracker</title>
   <style>
+    @font-face {
+      font-family: 'Aptos';
+      src: url('https://fonts.cdnfonts.com/s/96474/Aptos-Regular.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+    body, input, textarea, select, button {
+      font-family: 'Aptos', Arial, sans-serif;
+    }
     :root {
       --bg: #f9fafb;
       --panel: #ffffff;
@@ -23,7 +32,6 @@
     }
     body {
       margin: 0;
-      font-family: Inter, system-ui, Segoe UI, Arial, sans-serif;
       background: var(--bg);
       color: var(--ink);
     }
@@ -36,13 +44,13 @@
       border-bottom: 1px solid var(--line);
     }
     .wrap {
-      max-width: 1200px;
+      max-width: 1600px;
       margin: 0 auto;
-      padding: 16px 20px;
+      padding: 20px 48px;
     }
     h1 {
       margin: 0;
-      font-size: 20px;
+      font-size: 22px;
       letter-spacing: 0.2px;
       display: flex;
       align-items: center;
@@ -58,19 +66,17 @@
       border-radius: 999px;
       padding: 4px 8px;
     }
-
     .grid {
       display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 16px;
+      grid-template-columns: 480px 1fr;
+      gap: 32px;
       margin-top: 16px;
     }
-    @media (max-width: 980px) {
+    @media (max-width: 1300px) {
       .grid {
         grid-template-columns: 1fr;
       }
     }
-
     .card {
       background: linear-gradient(180deg, var(--panel), var(--panel-2));
       border: 1px solid var(--line);
@@ -78,18 +84,17 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     }
     .card-inner {
-      padding: 16px;
+      padding: 20px;
     }
     .card h2 {
-      margin: 0 0 10px 0;
-      font-size: 15px;
+      margin: 0 0 12px 0;
+      font-size: 17px;
       color: var(--ink);
       font-weight: 700;
     }
-
     label {
       display: block;
-      font-size: 12px;
+      font-size: 13px;
       color: var(--muted);
       margin: 10px 0 6px;
     }
@@ -97,20 +102,20 @@
     input[type="number"],
     textarea {
       width: 100%;
-      padding: 10px 12px;
+      padding: 12px 14px;
       border-radius: 10px;
       border: 1px solid var(--line);
       background: var(--chip);
       color: var(--ink);
-      font-size: 14px;
+      font-size: 15px;
     }
     textarea {
-      min-height: 72px;
+      min-height: 80px;
       resize: vertical;
     }
     .row {
       display: flex;
-      gap: 10px;
+      gap: 14px;
     }
     .row > * {
       flex: 1;
@@ -120,21 +125,21 @@
       align-items: center;
       gap: 8px;
       color: var(--ink);
-      font-size: 13px;
+      font-size: 14px;
     }
     .actions {
       display: flex;
-      gap: 10px;
-      margin-top: 12px;
+      gap: 12px;
+      margin-top: 14px;
       flex-wrap: wrap;
     }
     button {
       cursor: pointer;
       border: none;
       border-radius: 10px;
-      padding: 10px 12px;
+      padding: 12px 14px;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 15px;
       transition: background-color 0.2s ease;
     }
     .btn-primary {
@@ -158,16 +163,15 @@
     .btn-danger:hover {
       background: #c0392b;
     }
-
     .toolbar {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       flex-wrap: wrap;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .pill {
-      font-size: 12px;
+      font-size: 13px;
       border: 1px solid var(--line);
       background: #d6e0f0;
       color: var(--brand);
@@ -175,15 +179,14 @@
       padding: 6px 10px;
       user-select: none;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 14px;
+      font-size: 15px;
     }
     thead th {
       position: sticky;
-      top: 65px;
+      top: 70px;
       background: var(--panel-2);
       border-bottom: 1px solid var(--line);
       padding: 10px 8px;
@@ -195,26 +198,27 @@
     thead tr.filter-row th {
       background: var(--panel);
       border-bottom: none;
-      padding: 4px 8px;
+      padding: 5px 9px;
     }
-    thead tr.filter-row input {
+    thead tr.filter-row input,
+    thead tr.filter-row select {
       width: 100%;
       border: 1px solid var(--line);
       border-radius: 6px;
-      padding: 4px 6px;
-      font-size: 13px;
+      padding: 5px 6px;
+      font-size: 14px;
       background: var(--chip);
       color: var(--ink);
       box-sizing: border-box;
     }
     tbody td {
       border-bottom: 1px dashed var(--line);
-      padding: 10px 8px;
+      padding: 12px 8px;
       vertical-align: top;
       color: var(--ink);
     }
     tfoot td {
-      padding: 12px 8px;
+      padding: 14px 8px;
       font-weight: 700;
       color: var(--ink);
       border-top: 1px solid var(--line);
@@ -227,11 +231,11 @@
     }
     .chip {
       display: inline-block;
-      font-size: 11px;
+      font-size: 12px;
       background: var(--chip);
       border: 1px solid var(--line);
       color: var(--ink);
-      padding: 4px 8px;
+      padding: 5px 9px;
       border-radius: 999px;
     }
     .chip.ok {
@@ -249,29 +253,50 @@
       color: #a93226;
       background: #fbdada;
     }
-
     .stats {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       flex-wrap: wrap;
       margin: 8px 0 0;
       color: var(--ink);
-      font-size: 12px;
+      font-size: 13px;
     }
     .stat {
       background: var(--chip);
       border: 1px solid var(--line);
       padding: 10px 12px;
       border-radius: 10px;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--brand);
     }
-
     .empty {
       padding: 30px;
       text-align: center;
       color: var(--muted);
+    }
+    /* Modal styles */
+    #sendModal {
+      display:none;
+      position:fixed;
+      top:0; left:0;
+      width:100vw; height:100vh;
+      background:rgba(0,0,0,0.3);
+      z-index:900;
+      align-items:center;
+      justify-content:center;
+    }
+    #sendModal .modal-content {
+      background:#fff;
+      border-radius:10px;
+      padding:24px 32px;
+      box-shadow:0 4px 32px rgba(0,0,0,0.2);
+      max-width:400px;
+      margin:auto;
+      color:#2f3a50;
+    }
+    #sendModal h3 {
+      margin-top: 0;
     }
   </style>
 </head>
@@ -285,16 +310,13 @@
 
   <div class="wrap">
     <div class="grid">
-      <!-- Left: Form -->
       <section class="card">
         <div class="card-inner">
           <h2 id="formTitle">Add Task</h2>
           <form id="taskForm">
             <input type="hidden" id="taskId" />
-
             <label>Task</label>
             <input id="taskDescription" type="text" placeholder="e.g., GST return filing – ACME Pvt Ltd" required />
-
             <div class="row">
               <div>
                 <label>Client</label>
@@ -305,7 +327,6 @@
                 <input id="assigned" type="text" placeholder="Assigned to" />
               </div>
             </div>
-
             <div class="row">
               <div>
                 <label>Reviewer</label>
@@ -316,14 +337,11 @@
                 <input id="hoursSpent" type="number" step="0.25" min="0" placeholder="0" />
               </div>
             </div>
-
             <label class="chk">
               <input type="checkbox" id="billable" /> Billable work
             </label>
-
             <label>Notes</label>
             <textarea id="remarks" placeholder="Any details or checklist…"></textarea>
-
             <div class="actions">
               <button type="submit" class="btn-primary" id="saveBtn">Save Task</button>
               <button type="button" class="btn" id="resetBtn">Reset</button>
@@ -332,8 +350,6 @@
           </form>
         </div>
       </section>
-
-      <!-- Right: Table -->
       <section class="card">
         <div class="card-inner">
           <div class="toolbar">
@@ -342,7 +358,6 @@
             <button class="btn" id="exportCsvBtn">Export CSV</button>
             <span class="pill" id="sortInfo">Sorted by Newest</span>
           </div>
-
           <table id="taskTable">
             <thead>
               <tr>
@@ -402,32 +417,24 @@
       </section>
     </div>
   </div>
-
+  <!-- Modal for sending billable info -->
+  <div id="sendModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); z-index:900; align-items:center; justify-content:center;">
+    <div class="modal-content">
+      <h3>Send Task Info</h3>
+      <p id="modalText" style="font-size:15px;margin-bottom:18px;"></p>
+      <button id="sendEmailBtn" class="btn-primary" style="margin-right:12px;margin-bottom:8px;">Send to Email</button>
+      <button id="sendWhatsAppBtn" class="btn" style="margin-bottom:8px;">Send to WhatsApp</button>
+      <button id="closeModalBtn" class="btn-danger" style="float:right;">Close</button>
+    </div>
+  </div>
   <script>
     const STORAGE_KEY = 'task-tracker-table-v3';
-
-    /** @typedef {{
-      id: number,
-      description: string,
-      client: string,
-      assigned: string,
-      reviewBy: string,
-      billable: boolean,
-      remarks: string,
-      createdAt: string,
-      done: boolean,
-      completedAt?: string,
-      hours?: number
-    }} Task */
-
-    /** @type {Task[]} */
     let tasks = [];
     try {
       tasks = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     } catch {
       tasks = [];
     }
-
     const els = {
       form: document.getElementById('taskForm'),
       id: document.getElementById('taskId'),
@@ -450,6 +457,11 @@
       formTitle: document.getElementById('formTitle'),
       saveBtn: document.getElementById('saveBtn'),
       filterInputs: document.querySelectorAll('thead tr.filter-row [data-filter]'),
+      sendModal: document.getElementById('sendModal'),
+      modalText: document.getElementById('modalText'),
+      sendEmailBtn: document.getElementById('sendEmailBtn'),
+      sendWhatsAppBtn: document.getElementById('sendWhatsAppBtn'),
+      closeModalBtn: document.getElementById('closeModalBtn'),
     };
 
     let showPendingOnly = false;
@@ -470,75 +482,59 @@
     function esc(s = '') {
       return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' }[c]));
     }
-
-    // Filter matching helper
     function matchFilter(value, filter) {
       if (!filter) return true;
       if (typeof value !== 'string') value = String(value);
       return value.toLowerCase().includes(filter.toLowerCase());
     }
-
     function render() {
       const view = [...tasks]
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .filter(t => {
           if (showPendingOnly && t.done) return false;
-          // Apply filters on columns
           for (const key in filters) {
             const filterVal = filters[key];
             if (!filterVal) continue;
             switch (key) {
-              case 'index': {
+              case 'index':
                 if (!matchFilter(String(tasks.indexOf(t) + 1), filterVal)) return false;
                 break;
-              }
-              case 'created': {
+              case 'created':
                 if (!matchFilter(new Date(t.createdAt).toLocaleDateString(), filterVal)) return false;
                 break;
-              }
-              case 'description': {
+              case 'description':
                 if (!matchFilter(t.description, filterVal)) return false;
                 break;
-              }
-              case 'client': {
+              case 'client':
                 if (!matchFilter(t.client || '', filterVal)) return false;
                 break;
-              }
-              case 'assigned': {
+              case 'assigned':
                 if (!matchFilter(t.assigned || '', filterVal)) return false;
                 break;
-              }
-              case 'reviewBy': {
+              case 'reviewBy':
                 if (!matchFilter(t.reviewBy || '', filterVal)) return false;
                 break;
-              }
-              case 'billable': {
+              case 'billable':
                 if (filterVal === 'billable' && !t.billable) return false;
                 if (filterVal === 'non-billable' && t.billable) return false;
                 break;
-              }
-              case 'completed': {
+              case 'completed':
                 if (!matchFilter(t.completedAt ? new Date(t.completedAt).toLocaleDateString() : '', filterVal)) return false;
                 break;
-              }
-              case 'age': {
+              case 'age':
                 const age = t.done ? '' : daysBetween(t.createdAt, todayISO());
                 if (!matchFilter(age.toString(), filterVal)) return false;
                 break;
-              }
-              case 'done': {
+              case 'done':
                 if (filterVal === 'Yes' && !t.done) return false;
                 if (filterVal === 'No' && t.done) return false;
                 break;
-              }
-              case 'hours': {
+              case 'hours':
                 if (!matchFilter((Number(t.hours) || 0).toFixed(2), filterVal)) return false;
                 break;
-              }
-              case 'notes': {
+              case 'notes':
                 if (!matchFilter(t.remarks || '', filterVal)) return false;
                 break;
-              }
             }
           }
           return true;
@@ -584,7 +580,6 @@
       els.empty.hidden = view.length !== 0;
       renderStats();
     }
-
     function renderStats() {
       const open = tasks.filter(t => !t.done).length;
       const done7 = tasks.filter(t => t.done && t.completedAt && daysBetween(t.completedAt, todayISO()) <= 7).length;
@@ -595,8 +590,6 @@
         <div class="stat">Billable Hours (all): <b>${billableHrs.toFixed(2)}</b></div>
       `;
     }
-
-    // Form
     els.form.addEventListener('submit', (e) => {
       e.preventDefault();
       const id = els.id.value.trim();
@@ -613,12 +606,10 @@
         alert('Task is required');
         return;
       }
-
       if (id) {
         const t = tasks.find(x => String(x.id) === id); if (!t) return;
         Object.assign(t, payload);
       } else {
-        /** @type {Task} */
         const t = { id: Date.now(), createdAt: new Date().toISOString(), done: false, completedAt: undefined, ...payload };
         tasks.push(t);
       }
@@ -630,7 +621,6 @@
       els.formTitle.textContent = 'Add Task';
       els.saveBtn.textContent = 'Save Task';
     });
-
     function editTask(id) {
       const t = tasks.find(x => x.id === id); if (!t) return;
       els.id.value = String(t.id);
@@ -640,31 +630,46 @@
       els.formTitle.textContent = 'Edit Task';
       els.saveBtn.textContent = 'Update Task';
     }
-
     function remove(id) { if (confirm('Delete this task?')) { tasks = tasks.filter(t => t.id !== id); save(); render(); } }
-
     function toggleDone(id, checked) {
       const t = tasks.find(x => x.id === id); if (!t) return;
       t.done = checked;
-      t.completedAt = checked ? todayISO() : undefined; // auto set/clear completion date
+      t.completedAt = checked ? todayISO() : undefined;
       save();
       render();
+      if (checked && t.billable) {
+        showSendModal(t);
+      }
     }
-
-    // Toolbar
+    function showSendModal(task) {
+      els.sendModal.style.display = 'flex';
+      els.modalText.textContent =
+        `Task: ${task.description}\nClient: ${task.client}\nAssignee: ${task.assigned}\nHours: ${task.hours}\nNotes: ${task.remarks}`;
+      const subject = encodeURIComponent('Billable Task Completed');
+      const body = encodeURIComponent(
+        `Task: ${task.description}\nClient: ${task.client}\nAssignee: ${task.assigned}\nHours: ${task.hours}\nNotes: ${task.remarks}`
+      );
+      els.sendEmailBtn.onclick = function() {
+        window.open(`mailto:accounts@yourcompany.com?subject=${subject}&body=${body}`, "_blank");
+      };
+      els.sendWhatsAppBtn.onclick = function() {
+        window.open(`https://wa.me/?text=${body}`, "_blank");
+      };
+      els.closeModalBtn.onclick = function() {
+        els.sendModal.style.display = 'none';
+      };
+    }
     els.pendingSummaryBtn.addEventListener('click', () => {
       const pending = tasks.filter(t => !t.done).sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       if (!pending.length) { alert('No pending tasks.'); return; }
       const lines = pending.map(t => `• ${t.description} — ${daysBetween(t.createdAt, todayISO())} day(s) — ${t.client || '-'}`);
       alert(`Pending tasks by oldest (days since creation)\n\n${lines.join('\n')}`);
     });
-
     els.togglePendingBtn.addEventListener('click', () => {
       showPendingOnly = !showPendingOnly;
       els.togglePendingBtn.textContent = showPendingOnly ? 'Show All' : 'Show Pending Only';
       render();
     });
-
     els.exportCsvBtn.addEventListener('click', () => {
       const header = ['#', 'Created', 'Task', 'Client', 'Assignee', 'Reviewer', 'Billable', 'Completed', 'Age (days)', 'Done', 'Hours', 'Notes'];
       const view = [...tasks].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).filter(t => !showPendingOnly || !t.done);
@@ -683,14 +688,10 @@
       const blob = new Blob([csvStr], { type: 'text/csv' }); const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = 'tasks.csv'; a.click(); URL.revokeObjectURL(url);
     });
-
     function csv(s = '') { return '"' + String(s).replaceAll('"', '""') + '"'; }
-
-    // Filters
     els.filterInputs.forEach(input => {
       input.addEventListener('input', onFilterChange);
     });
-
     function onFilterChange() {
       filters = {};
       els.filterInputs.forEach(input => {
@@ -701,7 +702,6 @@
       });
       render();
     }
-
     function clearFilterInputs() {
       els.filterInputs.forEach(input => {
         if (input.tagName.toLowerCase() === 'select') {
@@ -712,8 +712,6 @@
       });
       filters = {};
     }
-
-    // Misc controls
     els.resetBtn.addEventListener('click', () => {
       els.form.reset();
       els.id.value = '';
@@ -732,8 +730,6 @@
         clearFilterInputs();
       }
     });
-
-    // Init
     render();
   </script>
 </body>
